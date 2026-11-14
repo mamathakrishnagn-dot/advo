@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Neon Arena - Rock Paper Scissors</title>
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  color: white;
+  background: linear-gradient(135deg, #100d27, #32114b, #101927);
+}
+
+.game {
+  width: 100%;
+  max-width: 460px;
+  text-align: center;
+  padding: 28px 20px;
+  border: 1px solid #7950ad;
+  border-radius: 22px;
+  background: #17152beF;
+  box-shadow: 0 0 35px #7b35bb40;
+}
+
+h1 { color: #c9a3ff; letter-spacing: 2px; }
+.subtitle { color: #bdb7d8; font-size: 13px; }
+
+.scores { display: flex; gap: 12px; margin: 24px 0; }
+.score-box { flex: 1; padding: 15px; background: #292342; border-radius: 12px; }
+.score-box p { font-size: 11px; color: #c5bedc; }
+.score { font-size: 34px; font-weight: bold; }
+#playerScore { color: #61f5c5; }
+#computerScore { color: #ff8eae; }
+
+.arena { display: flex; justify-content: space-around; margin: 24px 0; }
+.move { font-size: 48px; margin-bottom: 8px; }
+.label { color: #bdb7d8; font-size: 11px; }
+
+#result { min-height: 28px; color: #d6baff; font-size: 18px; }
+
+.choices { display: flex; gap: 9px; }
+.choice {
+  flex: 1;
+  padding: 13px 4px;
+  border: 1px solid #8053ba;
+  border-radius: 12px;
+  color: white;
+  background: #30234e;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.choice span { display: block; font-size: 30px; margin-bottom: 8px; }
+.choice:hover { background: #6841a0; transform: translateY(-3px); }
+
+#reset {
+  margin-top: 22px;
+  padding: 10px 20px;
+  border: 1px solid #a69ac3;
+  border-radius: 20px;
+  color: white;
+  background: transparent;
+  cursor: pointer;
+}
+button:focus-visible { outline: 2px solid #61f5c5; outline-offset: 3px; }
+
+@media (max-width: 360px) {
+  .game { padding: 22px 12px; }
+  .choice { font-size: 12px; }
+}
+</style>
+</head>
+<body>
+<main class="game">
+  <h1>NEON ARENA</h1>
+  <p class="subtitle">ROCK · PAPER · SCISSORS</p>
+
+  <section class="scores">
+    <div class="score-box">
+      <p>YOUR SCORE</p>
+      <div class="score" id="playerScore">0</div>
+    </div>
+    <div class="score-box">
+      <p>COMPUTER SCORE</p>
+      <div class="score" id="computerScore">0</div>
+    </div>
+  </section>
+
+  <section class="arena">
+    <div>
+      <div class="move" id="playerMove">❔</div>
+      <div class="label">YOUR MOVE</div>
+    </div>
+    <div>
+      <div class="move" id="computerMove">❔</div>
+      <div class="label">COMPUTER MOVE</div>
+    </div>
+  </section>
+
+  <h2 id="result" aria-live="polite">Choose your move!</h2>
+  <p class="subtitle">CHOOSE YOUR WEAPON</p>
+
+  <section class="choices">
+    <button class="choice" data-move="rock"><span>✊</span>Rock</button>
+    <button class="choice" data-move="paper"><span>✋</span>Paper</button>
+    <button class="choice" data-move="scissors"><span>✌️</span>Scissors</button>
+  </section>
+
+  <button id="reset">↻ Reset Score</button>
+</main>
+
+<script>
+let playerScore = 0;
+let computerScore = 0;
+
+const moves = ["rock", "paper", "scissors"];
+const emojis = { rock: "✊", paper: "✋", scissors: "✌️" };
+
+function playGame(playerMove) {
+  const computerMove = moves[Math.floor(Math.random() * 3)];
+
+  document.getElementById("playerMove").textContent = emojis[playerMove];
+  document.getElementById("computerMove").textContent = emojis[computerMove];
+
+  const result = document.getElementById("result");
+
+  if (playerMove === computerMove) {
+    result.textContent = "It's a draw! 🤝";
+  } else if (
+    (playerMove === "rock" && computerMove === "scissors") ||
+    (playerMove === "paper" && computerMove === "rock") ||
+    (playerMove === "scissors" && computerMove === "paper")
+  ) {
+    playerScore++;
+    result.textContent = "You win this round! 🎉";
+  } else {
+    computerScore++;
+    result.textContent = "Computer wins this round! 🤖";
+  }
+
+  document.getElementById("playerScore").textContent = playerScore;
+  document.getElementById("computerScore").textContent = computerScore;
+}
+
+document.querySelectorAll(".choice").forEach(button => {
+  button.addEventListener("click", () => playGame(button.dataset.move));
+});
+
+document.getElementById("reset").addEventListener("click", () => {
+  playerScore = 0;
+  computerScore = 0;
+  document.getElementById("playerScore").textContent = 0;
+  document.getElementById("computerScore").textContent = 0;
+  document.getElementById("playerMove").textContent = "❔";
+  document.getElementById("computerMove").textContent = "❔";
+  document.getElementById("result").textContent = "Choose your move!";
+});
+</script>
+</body>
+</html>
